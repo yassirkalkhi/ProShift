@@ -4,7 +4,7 @@ import  MainCard from "./components/Main/MainCard"
 export default function Home() {
   return (
     <>
-    <Header/>
+    <Header categories={false}/>
     <MainCard></MainCard>
     </>
   );

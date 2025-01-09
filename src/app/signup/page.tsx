@@ -145,7 +145,7 @@ const RegisterForm: React.FC = () => {
     <>
       <Header categories={false}/>
     <div className="min-h-screen flex flex-col items-center justify-start pt-8 sm:pt-12 lg:pt-16 px-4 bg-white">
-      <div className="w-full max-w-6xl grid gap-6 lg:gap-8 lg:grid-cols-2 items-start mt-20">
+      <div className="w-full max-w-6xl grid gap-6 lg:gap-8 lg:grid-cols-2 items-start mt-6 sm:mt-10 md:mt-20">
         {/* Left section remains the same */}
         <div className="hidden lg:block">
           <h2 className="text-5xl font-extrabold text-gray-800 leading-tight">

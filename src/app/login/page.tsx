@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
 import { auth } from "../../firebase/firebase";
-import { signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence, signOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence, signOut, GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 import Header from "../components/Navigation/Header";
@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
   const userRef = useRef<HTMLInputElement | null>(null); 
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -32,15 +32,15 @@ const LoginPage: React.FC = () => {
   }, []);
 
   //  logout
-  const handleLogout = async () => {
+  const handleLogout = React.useCallback(async () => {
     try {
       await signOut(auth); 
       setUser(null);
       router.push("/login");
-    } catch (error) {
+    } catch (error: unknown) {
       alert("Error logging out: " + error);
     }
-  };
+  }, [router]);
 
   const handleUserLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -63,8 +63,8 @@ const LoginPage: React.FC = () => {
       setError(null); 
       router.push("/"); 
 
-    } catch (error: any) {
-      const errorCode = error.code;
+    } catch (error) {
+      const errorCode = (error as { code: string }).code;
       let errorMessage = '';
 
 
@@ -90,8 +90,8 @@ const LoginPage: React.FC = () => {
       console.log('Google login successful:', user);
       setUser(user); 
       router.push("/"); 
-    } catch (error: any) {
-      const errorCode = error.code;
+    } catch (error) {
+      const errorCode = (error as { code: string }).code;
       let errorMessage = '';
 
       switch (errorCode) {
@@ -116,13 +116,13 @@ const LoginPage: React.FC = () => {
     }
 
     return () => clearTimeout(sessionTimeout);
-  }, [user]);
+  }, [user, handleLogout]);
 
   return (
     <>
       <Header categories={false} />
       <div className="min-h-screen flex flex-col items-center justify-start pt-8 sm:pt-12 lg:pt-16 px-8 lg:px-32 bg-white">
-        <div className="w-full max-w-6xl grid gap-6 lg:gap-8 lg:grid-cols-2 items-start mt-20">
+        <div className="w-full max-w-6xl grid gap-6 lg:gap-8 lg:grid-cols-2 items-start sm:mt-20">
           {/* Left side - Hero section */}
           <div className="hidden lg:block mt-8">
             <h2 className="text-5xl font-extrabold text-gray-800  leading-tight">
@@ -132,7 +132,7 @@ const LoginPage: React.FC = () => {
               Access your account with ease and confidence, ensuring a smooth and secure login process.
             </p>
             <p className="text-sm mt-8 text-gray-800">
-              Don't have an account 
+              Don&apos;t have an account 
               <a href="/signup" className="text-primary font-semibold hover:underline ml-1">
                 Register here
               </a>

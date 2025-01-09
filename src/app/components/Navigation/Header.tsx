@@ -3,19 +3,20 @@ import React, { useEffect, useState } from 'react';
 import { auth } from "../../../firebase/firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import firebase from 'firebase/compat/app';
 
 interface HeaderProps {
-  categories: Boolean;
+  categories: boolean;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
   const [isClient, setIsClient] = useState(false);
-  const [user, setUser] = useState<any>(null); //authenticated user
+  const [user, setUser] = useState<firebase.User | null>(null); //authenticated user
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user); // Update user state
+      setUser(user as firebase.User | null); 
     });
     setIsClient(true);
     return () => unsubscribe(); 
