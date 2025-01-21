@@ -19,6 +19,20 @@ export const passwordSchema = z.string()
   .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character")
   .refine((password) => !password.includes(" "), { message: "Password cannot contain spaces" });
 
+  export const nameSchema = z
+  .string()
+  .min(1, "")
+  .max(50, "Name must be less than 50 characters")
+  .regex(/^[A-Za-z\s]+$/, "Name can only contain letters and spaces");
+
+  export const usernameSchema = z
+  .string()
+  .min(3, "")
+  .max(20, "Username must be less than 20 characters")
+  .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain letters, numbers, underscores, and dashes");
+
+
+
 export const formSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
